@@ -85,15 +85,11 @@ void setup() {
 // callback when data is recv from Server
 void OnDataRecv(uint8_t *mac_addr, uint8_t *data, uint8_t data_len) {
   char macStr[18];
-  int temp;
   snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
           mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
   Serial.print("Last Packet Recv from: "); Serial.println(macStr);
-  temp = (int)(data[0] + (data[1]<<8));
-  Serial.print("Last Packet Recv Data: "); Serial.println(temp);
+  Serial.print("Last Packet Recv Data: "); Serial.print(data[0]); Serial.println(data[1]);
   Serial.println("");
-  temp = 4095 - temp;
-  analogWrite(16, temp);
 }
 
 void loop() {
