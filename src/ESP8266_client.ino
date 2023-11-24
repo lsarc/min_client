@@ -35,6 +35,14 @@
 
 #define CHANNEL 1
 
+//Seven segment pins attachecd with nodemcu pins  
+int a = 0;  //Gpio-0 with a of 7 segment display   
+int b = 1;  //Gpio-1 with b of 7 segment display    
+int c = 2;  //Gpio-2 with c of 7 segment display  
+int d = 3;  //Gpio-3 with d of 7 segment display  
+int e = 4;  //Gpio-4 with e of 7 segment display   
+int f = 5;  //Gpio-5 with f of 7 segment display  
+int g = 16; //Gpio-16 with g of 7 segment display
 
 // Init ESP Now with fallback
 void InitESPNow() {
@@ -80,8 +88,30 @@ void setup() {
   // Once ESPNow is successfully Init, we will register for recv CB to
   // get recv packer info.
   esp_now_register_recv_cb(OnDataRecv);
+
+  pinMode(D5, OUTPUT); // unidade
+  pinMode(D6, OUTPUT); // dezena
+//  pinMode(D7, OUTPUT); // centena
+  pinMode(a, OUTPUT);
+  pinMode(b, OUTPUT);
+  pinMode(c, OUTPUT);
+  pinMode(d, OUTPUT);
+  pinMode(e, OUTPUT);
+  pinMode(f, OUTPUT);
+  pinMode(g, OUTPUT);
+  digitalWrite(D5, HIGH);
+  digitalWrite(D6, HIGH);
+//  digitalWrite(D7, HIGH);
+  digitalWrite(a, LOW);
+  digitalWrite(b, LOW);
+  digitalWrite(c, LOW);
+  digitalWrite(d, LOW);
+  digitalWrite(e, LOW);
+  digitalWrite(f, LOW);
+  digitalWrite(g, LOW);
 }
 
+int dez, uni;
 // callback when data is recv from Server
 void OnDataRecv(uint8_t *mac_addr, uint8_t *data, uint8_t data_len) {
   char macStr[18];
@@ -89,9 +119,111 @@ void OnDataRecv(uint8_t *mac_addr, uint8_t *data, uint8_t data_len) {
           mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
   Serial.print("Last Packet Recv from: "); Serial.println(macStr);
   Serial.print("Last Packet Recv Data: "); Serial.print(data[0]); Serial.println(data[1]);
+  dez = data[0];
+  uni = data[1];
   Serial.println("");
 }
 
 void loop() {
-  // Chill
+  digitalWrite(D5, HIGH);
+  digitalWrite(D6, LOW);
+  handle7seg(uni);
+  delay(10);
+  digitalWrite(D5, LOW);
+  digitalWrite(D6, HIGH);
+  handle7seg(dez);
+  delay(10);
+}
+
+void handle7seg(int num) {
+  if (num == 0) {
+    digitalWrite(a, LOW);
+    digitalWrite(b, LOW);
+    digitalWrite(c, LOW);
+    digitalWrite(d, LOW);
+    digitalWrite(e, LOW);
+    digitalWrite(f, LOW);
+    digitalWrite(g, HIGH);
+  }
+  else if (num == 1) {
+    digitalWrite(a, HIGH);
+    digitalWrite(b, LOW);
+    digitalWrite(c, LOW);
+    digitalWrite(d, HIGH);
+    digitalWrite(e, HIGH);
+    digitalWrite(f, HIGH);
+    digitalWrite(g, HIGH);
+  }
+  else if (num == 2) {
+    digitalWrite(a, LOW);
+    digitalWrite(b, LOW);
+    digitalWrite(c, HIGH);
+    digitalWrite(d, LOW);
+    digitalWrite(e, LOW);
+    digitalWrite(f, HIGH);
+    digitalWrite(g, LOW);
+  }
+  else if (num == 3) {
+    digitalWrite(a, LOW);
+    digitalWrite(b, LOW);
+    digitalWrite(c, LOW);
+    digitalWrite(d, LOW);
+    digitalWrite(e, HIGH);
+    digitalWrite(f, HIGH);
+    digitalWrite(g, LOW);
+  }
+  else if (num == 4) {
+    digitalWrite(a, HIGH);
+    digitalWrite(b, LOW);
+    digitalWrite(c, LOW);
+    digitalWrite(d, HIGH);
+    digitalWrite(e, HIGH);
+    digitalWrite(f, LOW);
+    digitalWrite(g, LOW);
+  }
+  else if (num == 5) {
+    digitalWrite(a, LOW);
+    digitalWrite(b, HIGH);
+    digitalWrite(c, LOW);
+    digitalWrite(d, LOW);
+    digitalWrite(e, HIGH);
+    digitalWrite(f, LOW);
+    digitalWrite(g, LOW);
+  }
+  else if (num == 6) {
+    digitalWrite(a, LOW);
+    digitalWrite(b, HIGH);
+    digitalWrite(c, LOW);
+    digitalWrite(d, LOW);
+    digitalWrite(e, LOW);
+    digitalWrite(f, LOW);
+    digitalWrite(g, LOW);
+  }
+  else if (num == 7) {
+    digitalWrite(a, LOW);
+    digitalWrite(b, LOW);
+    digitalWrite(c, LOW);
+    digitalWrite(d, HIGH);
+    digitalWrite(e, HIGH);
+    digitalWrite(f, HIGH);
+    digitalWrite(g, HIGH);
+  }
+  else if (num == 8) {
+    digitalWrite(a, LOW);
+    digitalWrite(b, LOW);
+    digitalWrite(c, LOW);
+    digitalWrite(d, LOW);
+    digitalWrite(e, LOW);
+    digitalWrite(f, LOW);
+    digitalWrite(g, LOW);
+  }
+  else if (num == 9) {
+    digitalWrite(a, LOW);
+    digitalWrite(b, LOW);
+    digitalWrite(c, LOW);
+    digitalWrite(d, HIGH);
+    digitalWrite(e, HIGH);
+    digitalWrite(f, LOW);
+    digitalWrite(g, LOW);
+  }
 }
