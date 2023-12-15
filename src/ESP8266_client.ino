@@ -34,136 +34,89 @@
 
 #define CHANNEL 1
 
-class SevenSeg {
-  private:
-    int a, b, c, d, e, f, g;
-  public:
-    SevenSeg(int pin[7]) {
-      // Use 'this->' to make the difference between the
-      // 'pin' attribute of the class and the 
-      // local variable 'pin' created from the parameter.
-      this->a = pin[0];
-      this->b = pin[1];
-      this->c = pin[2];
-      this->d = pin[3];
-      this->e = pin[4];
-      this->f = pin[5];
-      this->g = pin[6];
-      init();
-    }
+const int a = D0;
+const int b = D1;
+const int c = D2;
+const int d = D3;
+const int pinUni = D4;
+const int pinDez = D5;
 
-    void init() {
-      pinMode(a, OUTPUT);
-      pinMode(b, OUTPUT);
-      pinMode(c, OUTPUT);
-      pinMode(d, OUTPUT);
-      pinMode(e, OUTPUT);
-      pinMode(f, OUTPUT);
-      pinMode(g, OUTPUT);
-      handle7seg(-1);
-    }
-
-    void handle7seg(int num) {
+void handle7seg(int num) {
       switch (num){
         case 0:
         digitalWrite(a, LOW);
         digitalWrite(b, LOW);
         digitalWrite(c, LOW);
         digitalWrite(d, LOW);
-        digitalWrite(e, LOW);
-        digitalWrite(f, LOW);
-        digitalWrite(g, HIGH);
+
         break;
 
         case (1):
         digitalWrite(a, HIGH);
         digitalWrite(b, LOW);
         digitalWrite(c, LOW);
-        digitalWrite(d, HIGH);
-        digitalWrite(e, HIGH);
-        digitalWrite(f, HIGH);
-        digitalWrite(g, HIGH);
+        digitalWrite(d, LOW);
         break;
         
         case (2):
         digitalWrite(a, LOW);
-        digitalWrite(b, LOW);
-        digitalWrite(c, HIGH);
-        digitalWrite(d, LOW);
-        digitalWrite(e, LOW);
-        digitalWrite(f, HIGH);
-        digitalWrite(g, LOW);
-        break;
-
-        case 3:
-        digitalWrite(a, LOW);
-        digitalWrite(b, LOW);
-        digitalWrite(c, LOW);
-        digitalWrite(d, LOW);
-        digitalWrite(e, HIGH);
-        digitalWrite(f, HIGH);
-        digitalWrite(g, LOW);
-        break;
-
-        case 4:
-        digitalWrite(a, HIGH);
-        digitalWrite(b, LOW);
-        digitalWrite(c, LOW);
-        digitalWrite(d, HIGH);
-        digitalWrite(e, HIGH);
-        digitalWrite(f, LOW);
-        digitalWrite(g, LOW);
-        break;
-
-        case 5:
-        digitalWrite(a, LOW);
         digitalWrite(b, HIGH);
         digitalWrite(c, LOW);
         digitalWrite(d, LOW);
-        digitalWrite(e, HIGH);
-        digitalWrite(f, LOW);
-        digitalWrite(g, LOW);
+        break;
+
+        case 3:
+        digitalWrite(a, HIGH);
+        digitalWrite(b, HIGH);
+        digitalWrite(c, LOW);
+        digitalWrite(d, LOW);
+        break;
+
+        case 4:
+        digitalWrite(a, LOW);
+        digitalWrite(b, LOW);
+        digitalWrite(c, HIGH);
+        digitalWrite(d, LOW);
+        break;
+
+        case 5:
+        digitalWrite(a, HIGH);
+        digitalWrite(b, LOW);
+        digitalWrite(c, HIGH);
+        digitalWrite(d, LOW);
         break;
 
         case 6:
         digitalWrite(a, LOW);
         digitalWrite(b, HIGH);
-        digitalWrite(c, LOW);
+        digitalWrite(c, HIGH);
         digitalWrite(d, LOW);
-        digitalWrite(e, LOW);
-        digitalWrite(f, LOW);
-        digitalWrite(g, LOW);
+
         break;
 
         case 7:
-        digitalWrite(a, LOW);
-        digitalWrite(b, LOW);
-        digitalWrite(c, LOW);
-        digitalWrite(d, HIGH);
-        digitalWrite(e, HIGH);
-        digitalWrite(f, HIGH);
-        digitalWrite(g, HIGH);
+        digitalWrite(a, HIGH);
+        digitalWrite(b, HIGH);
+        digitalWrite(c, HIGH);
+        digitalWrite(d, LOW);
+
         break;
 
         case 8:
         digitalWrite(a, LOW);
         digitalWrite(b, LOW);
         digitalWrite(c, LOW);
-        digitalWrite(d, LOW);
-        digitalWrite(e, LOW);
-        digitalWrite(f, LOW);
-        digitalWrite(g, LOW);
+        digitalWrite(d, HIGH);
+
         break;
 
 
         case 9:
-        digitalWrite(a, LOW);
+        digitalWrite(a, HIGH);
         digitalWrite(b, LOW);
         digitalWrite(c, LOW);
         digitalWrite(d, HIGH);
-        digitalWrite(e, HIGH);
-        digitalWrite(f, LOW);
-        digitalWrite(g, LOW);
+  
         break;
 
         default:
@@ -171,13 +124,10 @@ class SevenSeg {
         digitalWrite(b, HIGH);
         digitalWrite(c, HIGH);
         digitalWrite(d, HIGH);
-        digitalWrite(e, HIGH);
-        digitalWrite(f, HIGH);
-        digitalWrite(g, HIGH);
+
         break;
     }
   }
-};
 
 // Init ESP Now with fallback
 void InitESPNow() {
@@ -210,6 +160,12 @@ void configDeviceAP() {
 
 void setup() {
   Serial.begin(115200);
+  pinMode(a, OUTPUT);
+  pinMode(b, OUTPUT);
+  pinMode(c, OUTPUT);
+  pinMode(d, OUTPUT);
+  pinMode(pinUni, OUTPUT);
+  pinMode(pinDez, OUTPUT);
   Serial.println("ESPNow/Basic/Client Example");
   //Set device in AP mode to begin with
   WiFi.mode(WIFI_AP);
@@ -239,18 +195,13 @@ void OnDataRecv(uint8_t *mac_addr, uint8_t *data, uint8_t data_len) {
   Serial.println("");
 }
 
-int pinUni[] = {16, 5, 4, 0, 2, 14, 12};
-SevenSeg uniDisplay(pinUni);
-
-int pinDez[] = {13, 15, 15, 15, 15, 15, 15};
-SevenSeg dezDisplay(pinDez);
-
 void loop() {
-
-  uniDisplay.handle7seg(uni);
-  delay(10);
-
-  dezDisplay.handle7seg(dez);
-  delay(10);
-  delay(1000);
+    handle7seg(uni);
+    digitalWrite(pinUni, HIGH);
+    digitalWrite(pinDez, LOW);
+    delay(10);
+    handle7seg(dez);
+    digitalWrite(pinUni, LOW);
+    digitalWrite(pinDez, HIGH);
+    delay(10);
 }
